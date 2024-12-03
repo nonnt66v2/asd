@@ -1,0 +1,20 @@
+A novembre uscì:
+T n-1 + logn
+Fare dijkstra e trovare l'arco di peso mediano
+Fare dfs e vedere se c'era arco trasversale
+Codifica di huffman (c'è un esercizio simile sulle slide )
+Definizione di alfabeto, linguaggio, DFA
+Trovare L(A) in 0,1Potenze di 3
+
+A dicembre uscì : T(n) = 8T(n/4)+n²logn
+Definizione classe P e Np e dire perché p era contenuto in np
+Esercizio coda di priorità (sjf)
+Kruskal restituire elemento massimo(quindi restituite l'ultimo elemento)
+Bellmanford e dfs (chiedeva di ritornare il ciclo con più nodi)
+
+A febbraio:
+1. T(n) = 2T(sqrt(n)) + log(n)
+2. Definizione di NFA
+3. Data l'equazione ricorrente QUAD(n) = QUAD(n-1) + QUAD(n-2) + 6n - 5 scrivere un algoritmo usando la memoization che usandola calcoli il quadrato di n
+4. Dato un grafo non orientato e definito il tempo di visita come tempo di fine - tempo di inizio, calcolare il numero di nodi con tempo di visita = 1 ed il numero di nodi con tempo di visita massimo
+5. Dato un albero binario verificare che sia un Red Black
