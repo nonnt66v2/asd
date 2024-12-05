@@ -1,0 +1,7 @@
+# ninja log v6
+3	94	1733393944868493545	CMakeFiles/BFS.dir/main.cpp.o.ddi	fed6107e6cc29e38
+94	97	1733393944962502724	CMakeFiles/BFS.dir/CXX.dd	c9265693781b52ff
+94	97	1733393944962502724	/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/es_miei/BFS/cmake-build-debug/CMakeFiles/BFS.dir/CXXModules.json	c9265693781b52ff
+94	97	1733393944962502724	CMakeFiles/BFS.dir/main.cpp.o.modmap	c9265693781b52ff
+97	596	1733393944962502724	CMakeFiles/BFS.dir/main.cpp.o	9aa2acfe58564784
+596	653	1733393945461551001	BFS	becc4a59363fc4e9

@@ -1,6 +1,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <climits>
+#include <queue>
 
 using namespace std;
 
@@ -10,6 +12,7 @@ enum ColoreVertice {
 enum TipoArco {
     ND, ARCO_AVANTI, ARCO_INDIETRO, ARCO_ALBERO, ARCO_CROSS
 };
+
 class Edge;
 
 class nodo {
@@ -21,7 +24,7 @@ public:
     int d;
     int f;
     nodo *p;
-    vector<Edge*> adj;
+    vector<Edge *> adj;
 
     nodo(int key, string label) : chiave{key}, label{label} {}
 };
@@ -52,6 +55,11 @@ public:
 
     void printExtendedInfo();
 
+    void BFS(int s);
+
+    void DFS();
+
+    void DFS_Visit(nodo *u, int &time);
 
 };
 
@@ -68,56 +76,208 @@ nodo *Graph::addNodo(std::string label) {
 
 vector<Edge *> Graph::getEdges() {
     vector<Edge *> edge;
-    for (auto& u: V)
-        for (auto& uedge: u->adj)
-            edge.push_back((Edge*)uedge);
+    for (auto u: V)
+        for (auto uedge: u->adj)
+            edge.push_back(uedge);
     return edge;
 }
 
 void Graph::printInfo() {
-    for(auto& u:V){
-        std::cout<<"vertex{"<<u->chiave<<"} "<<u->label<<" -> ";
-        for(auto edge:u->adj)
-            cout<<edge->v->label<<",";
-        cout<<"\b\n";
+    for (auto &u: V) {
+        std::cout << "vertex{" << u->chiave << "} " << u->label << " -> ";
+        for (auto edge: u->adj)
+            cout << edge->v->label << ",";
+        cout << "\b\n";
     }
 }
-class DirectedGraph : public Graph{
-public:
-    DirectedGraph(int n=0);
-    void addEdge(int ukey, int vkey, int wieght);
-    void getTransposed(DirectedGraph& dgt);
-    ~DirectedGraph();
 
-};
+void Graph::BFS(int s) {
+    for (auto u: V) {
+        u->color = WHITE;
+        u->p = nullptr;
+        u->d = INT_MAX;
+    }
+    V[s]->color = GRAY;
+    V[s]->p = nullptr;
+    V[s]->d = 0;
 
-DirectedGraph::DirectedGraph(int n){
-    for(int i=0; i<n; i++)
-        addNodo();
-}
+    queue<nodo *> q;
+    q.push(V[s]);
+    while (!q.empty()) {
+        nodo *u = q.front();
+        q.pop();
+        cout << "vertex{" << u->label << "}: \n";
+        for (auto edge: u->adj) {
+            if (edge->v->color == WHITE) {
+                V[edge->v->chiave]->color = GRAY;
+                V[edge->v->chiave]->p = u;
+                V[edge->v->chiave]->d = u->d + 1;
+                cout << "\tvertex{" << V[edge->v->chiave]->label << "}: \n";
+                q.push(V[edge->v->chiave]);
+                cout << "\t dimensione coda -> " << q.size() << "\n";
+            }
 
-void DirectedGraph::addEdge(int ukey, int vkey, int weight) {
-    V[ukey]->adj.push_back(new Edge(V[ukey],V[vkey],weight));
-}
-
-void DirectedGraph::getTransposed(DirectedGraph &dgt) {
-    for(auto u:V){
-        dgt.addNodo(u->label);
+        }
+        u->color = BLACK;
+//        printInfo();
     }
 
-    for(auto u:V){
-        for(auto uedge:u->adj){
-            nodo *v = uedge->v;
-            dgt.addEdge(v->chiave,u->chiave,uedge->weight);
+}
+
+void Graph::printExtendedInfo() {
+    for (auto u: V) {
+        std::cout << "vertex{" << u->label << "} -> \n";
+        std::cout << "\t chiave: " << u->chiave << "\n";
+        if (u->p != nullptr) {
+            std::cout << "\t padre: " << u->p->label << "\n";
+        }
+        std::cout << "\t inizio: " << u->d << "\n";
+        std::cout << "\t fine: " << u->f << "\n";
+        std::cout << "\t colore: " << u->color << "\n";
+
+    }
+}
+
+void Graph::DFS_Visit(nodo *u, int &time) {
+    u->color = GRAY;
+    u->d = ++time;
+    cout << "vertex{" << u->label << ", " << time << "}: \n";
+    for (auto edge: u->adj) {
+        if (edge->v->color == WHITE) {
+            edge->v->p = u;
+            DFS_Visit(edge->v, time);
+        }
+    }
+    u->color = BLACK;
+    u->f = ++time;
+}
+
+void Graph::DFS() {
+    for (auto u: V) {
+        u->color = WHITE;
+        u->p = nullptr;
+    }
+    int time = 0;
+    for (auto u: V) {
+        if (u->color == WHITE) {
+            DFS_Visit(u, time);
         }
     }
 }
 
+class DirectedGraph : public Graph {
+public:
+    DirectedGraph(int n = 0);
+
+    void addEdge(int ukey, int vkey, int weight);
+
+    void getTransposed(DirectedGraph &dgt);
+
+    ~DirectedGraph();
+
+};
+
+DirectedGraph::DirectedGraph(int n) {
+    for (int i = 0; i < n; i++)
+        addNodo();
+}
+
+void DirectedGraph::addEdge(int ukey, int vkey, int weight) {
+    V[ukey]->adj.push_back(new Edge(V[ukey], V[vkey], weight));
+}
+
+void DirectedGraph::getTransposed(DirectedGraph &dgt) {
+    for (auto u: V) {
+        dgt.addNodo(u->label);
+    }
+
+    for (auto u: V) {
+        for (auto uedge: u->adj) {
+            nodo *v = uedge->v;
+            dgt.addEdge(v->chiave, u->chiave, uedge->weight);
+        }
+    }
+}
+
+DirectedGraph::~DirectedGraph() {
+    for (auto u: V) {
+        for (auto uedge: u->adj) {
+            delete uedge;
+        }
+        delete u;
+    }
+}
+
+class UndirectedGraph : public Graph {
+public:
+    UndirectedGraph(int n = 0);
+
+    void addEdge(int ukey, int vkey, int wieght);
+
+    ~UndirectedGraph();
+
+};
+
+UndirectedGraph::UndirectedGraph(int n) {
+    for (int i = 0; i < n; i++) {
+        addNodo();
+    }
+}
+
+void UndirectedGraph::addEdge(int ukey, int vkey, int weight) {
+    V[vkey]->adj.push_back(new Edge(V[vkey], V[ukey], weight));
+    V[ukey]->adj.push_back(new Edge(V[ukey], V[vkey], weight));
+}
+
+UndirectedGraph::~UndirectedGraph() {
+    for (auto u: V) {
+        for (auto uedge: u->adj) {
+            delete uedge;
+        }
+        delete u;
+    }
+}
+
+
 int main(int argc, char **argv) {
-    DirectedGraph *dg = new DirectedGraph(12);
-    dg->addEdge(0,1,12);
-    dg->addEdge(0,2,13);
-    dg->addEdge(0,3,14);
-    dg->addEdge(0,4,15);
-    dg->printInfo();
+    DirectedGraph *dg = new DirectedGraph();
+    nodo *a = dg->addNodo("a");
+    nodo *b = dg->addNodo("b");
+    dg->addEdge(a->chiave, b->chiave, 10);
+    nodo *c = dg->addNodo("c");
+    nodo *d = dg->addNodo("d");
+    dg->addEdge(c->chiave, d->chiave, 23);
+    nodo *e = dg->addNodo("e");
+    nodo *f = dg->addNodo("f");
+    dg->addEdge(e->chiave, f->chiave, 670);
+
+//    dg->printInfo();
+
+//    DirectedGraph *dgt = new DirectedGraph();
+//    dg->getTransposed(*dgt);
+    dg->addEdge(a->chiave, c->chiave, 13);
+    dg->addEdge(a->chiave, d->chiave, 16);
+    dg->addEdge(d->chiave, e->chiave, 17);
+    vector<Edge *> edges = dg->getEdges();
+    for (auto u: edges) {
+        cout << u->u->label << " " << u->v->label << " " << u->weight << "\n";
+    }
+    dg->BFS(0);
+    cout << "\n\nNON ORIENTATO\n\n";
+    UndirectedGraph *ung = new UndirectedGraph();
+    nodo *h = ung->addNodo("h");
+    nodo *g = ung->addNodo("g");
+    ung->addEdge(h->chiave, g->chiave, 300);
+    vector<Edge *> unEdges = ung->getEdges();
+    for (auto u: unEdges) {
+        cout << u->u->label << " " << u->v->label << " " << u->weight << "\n";
+    }
+    ung->printInfo();
+    ung->BFS(h->chiave);
+    dg->printExtendedInfo();
+
+    cout << "\n\nDFS\n\n";
+
+    dg->DFS();
+    dg->printExtendedInfo();
 }
