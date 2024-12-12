@@ -3,6 +3,7 @@
 #include <iostream>
 #include <climits>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -60,6 +61,12 @@ public:
     void DFS();
 
     void DFS_Visit(nodo *u, int &time);
+
+    void makeSet(nodo *x);
+
+    nodo *findSet(nodo *x);
+
+    void unionGraph(nodo *x, nodo *y);
 
 };
 
@@ -165,6 +172,33 @@ void Graph::DFS() {
     }
 }
 
+void Graph::makeSet(nodo *x) {
+    x->p = x;
+}
+
+nodo *Graph::findSet(nodo *x) {
+    if (x->p != x) {
+            x->p = findSet(x->p);
+    }
+    return x->p;
+}
+
+void Graph::unionGraph(nodo *x, nodo *y) {
+    nodo *a = findSet(x);
+    nodo*b = findSet(y);
+    if(a->rank > b->rank){
+        b->p = a ;
+    }
+    else {
+        a->p = b;
+        if(a->rank == b->rank){
+            b->rank++;
+        }
+    }
+}
+
+
+
 class DirectedGraph : public Graph {
 public:
     DirectedGraph(int n = 0);
@@ -174,6 +208,7 @@ public:
     void getTransposed(DirectedGraph &dgt);
 
     ~DirectedGraph();
+
 
 };
 
@@ -214,6 +249,7 @@ public:
 
     void addEdge(int ukey, int vkey, int wieght);
 
+    UndirectedGraph Kruskal(UndirectedGraph *g);
     ~UndirectedGraph();
 
 };
@@ -235,6 +271,24 @@ UndirectedGraph::~UndirectedGraph() {
             delete uedge;
         }
         delete u;
+    }
+}
+
+bool edgeCompare(Edge* uv, Edge* xy){
+    return (uv->weight < xy->weight);
+}
+UndirectedGraph UndirectedGraph::Kruskal(UndirectedGraph *g) {
+    UndirectedGraph A;
+    for(auto u : g->V){
+        makeSet(u);
+    }
+    vector<Edge*> edges = g->getEdges();
+    sort(edges.begin(),edges.end(),edgeCompare);
+    for(auto uv: edges){
+        if(findSet(uv->u) != findSet(uv->v)){
+            A.unionGraph(uv->u,uv->v);
+            union
+        }
     }
 }
 
