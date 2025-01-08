@@ -31,9 +31,9 @@ map<string, int> caricaMap() {
         f >> value;
         nodo[label] = value;
     }
-    for (auto &coppia: nodo) {
-        cout << coppia.first << " " << coppia.second << "\n";
-    }
+//    for (auto &coppia: nodo) {
+//        cout << coppia.first << " " << coppia.second << "\n";
+//    }
     return nodo;
 
 }
@@ -41,7 +41,8 @@ map<string, int> caricaMap() {
 template<typename T>
 class Nodo {
 public:
-    Nodo<T> *sx, *dx;
+    Nodo<T> *sx;
+    Nodo<T> *dx;
     T chiave;
     string label;
     Nodo<T> *padre;
@@ -66,9 +67,10 @@ public:
         else return false;
     }
 
-    void setChiave(map<string, int> coppia, string label) {
-        chiave = coppia[label];
+    void setChiave(int chiave) {
+        this->chiave = chiave;
     }
+    template<typename Tkey> friend class BST;
 };
 
 template<typename T>
@@ -82,15 +84,16 @@ private:
 
     void postorder(Nodo<T> *radice);
 
+    Nodo<T> *min(Nodo<T> *);
+
+    Nodo<T> *max(Nodo<T> *);
+
     Nodo<T> *search(Nodo<T> *radice, T chiave);
 
-    Nodo<T>* min(Nodo<T>* radice);
 
-    Nodo<T>* max(Nodo<T>* radice);
+    Nodo<T> *successor(Nodo<T> *radice);
 
-    Nodo<T>* successor(Nodo<T>* radice);
-
-    Nodo<T>* predecessor(Nodo<T>* radice);
+    Nodo<T> *predecessor(Nodo<T> *radice);
 
 
 public:
@@ -104,12 +107,12 @@ public:
 
     bool search(T chiave);
 
-    Nodo<T>* min();
+    T min();
 
-    Nodo<T>* max();
+    T max();
+
+    void insert(Nodo<T> *nodo);
 };
-
-
 
 
 template<typename T>
@@ -128,16 +131,17 @@ void BST<T>::preorder(Nodo<T> *radice) {
 
 template<typename T>
 void BST<T>::inorder() {
+    inorder(this->radice);
+
+}
+
+template<typename T>
+void BST<T>::inorder(Nodo<T> *radice) {
     if (radice != nullptr) {
         inorder(radice->sx);
         cout << radice->chiave << endl;
         inorder(radice->dx);
     }
-}
-
-template<typename T>
-void BST<T>::inorder(Nodo<T> *radice) {
-    inorder(this->radice);
 }
 
 template<typename T>
@@ -173,40 +177,42 @@ bool BST<T>::search(T chiave) {
 }
 
 template<typename T>
-Nodo<T>* BST<T>::min(Nodo<T>* radice){
-    if(radice == nullptr) return 0;
+Nodo<T> *BST<T>::min(Nodo<T> *radice) {
+    Nodo<T>* tmp = radice;
     while (radice->sx != nullptr) {
         min(radice->sx);
     }
-    return radice;
+    return tmp;
 }
+
 template<typename T>
-Nodo<T>* BST<T>::min() {
-    Nodo<T>* minimo = min(this->radice);
-    return (minimo);
+T BST<T>::min() {
+    Nodo<T> *minimo = min(this->radice);
+    return (minimo->chiave);
 }
+
 template<typename T>
-Nodo<T>* BST<T>::max(Nodo<T>* radice){
-    if(radice == nullptr) return 0;
+Nodo<T> *BST<T>::max(Nodo<T> *radice) {
+    Nodo<T>* tmp = radice;
     while (radice->dx != nullptr) {
         max(radice->dx);
     }
-    return radice;
+    return tmp;
 }
+
 template<typename T>
-Nodo<T>* BST<T>::max() {
-    Nodo<T>* maximo = max(this->radice);
-    return (maximo);
+T BST<T>::max() {
+    Nodo<T> *maximo = max(this->radice);
+    return (maximo->chiave);
 }
 
 template<typename T>
 Nodo<T> *BST<T>::successor(Nodo<T> *radice) {
-    if(radice->dx != nullptr){
+    if (radice->dx != nullptr) {
         return min(radice->dx);
-    }
-    else{
-        Nodo<T>* padre = radice->padre;
-        while(padre != nullptr && radice == padre->dx){
+    } else {
+        Nodo<T> *padre = radice->padre;
+        while (padre != nullptr && radice == padre->dx) {
             radice = padre;
             padre = padre->padre;
         }
@@ -214,14 +220,14 @@ Nodo<T> *BST<T>::successor(Nodo<T> *radice) {
         return padre;
     }
 }
+
 template<typename T>
 Nodo<T> *BST<T>::predecessor(Nodo<T> *radice) {
-    if(radice->sx != nullptr){
+    if (radice->sx != nullptr) {
         return max(radice->dx);
-    }
-    else{
-        Nodo<T>* padre = radice->padre;
-        while(padre != nullptr && radice == padre->sx){
+    } else {
+        Nodo<T> *padre = radice->padre;
+        while (padre != nullptr && radice == padre->sx) {
             radice = padre;
             padre = padre->padre;
         }
@@ -230,20 +236,44 @@ Nodo<T> *BST<T>::predecessor(Nodo<T> *radice) {
     }
 }
 
-
+template<typename T>
+void BST<T>::insert(Nodo<T> *nodo) {
+    Nodo<T> *x = this->radice;
+    Nodo<T> *xp = nullptr;
+    while (x != nullptr) {
+        xp = x;
+        nodo->chiave < x->chiave ? x= x->sx : x=x->dx;
+    }
+    nodo->padre = xp;
+    if (nodo->padre == nullptr) this->radice = nodo;
+    else {(nodo->chiave < nodo->padre->chiave) ? nodo->padre->sx = nodo : nodo->padre->dx = nodo;}
+}
 
 int main() {
     map<string, int> coppia;
     coppia = caricaMap();
     auto *nodo = new Nodo<int>();
-    nodo->setChiave(coppia, coppia.begin()->first);
-    auto *bst = new BST<int>();
-    bst->preorder();
-    bst->inorder();
-    bst->postorder();
-    if (bst->search(3) == TROVATO)cout << "trovato\n";
-    cout<<"minimo:"<<bst->min()<<endl;
-    cout<<"massimo:"<<bst->max()<<endl;
-    return 0;
+    nodo->setChiave(coppia.begin()->second);
+    auto bst = new BST<int>();
+    auto *a = new Nodo<int>();
+    a->setChiave(8);
+    auto *b = new Nodo<int>();
+    b->setChiave(3);
+    auto *c = new Nodo<int>();
+    c->setChiave(10);
+    auto *d = new Nodo<int>();
+    d->setChiave(1);
 
+
+    bst->insert(a);
+    bst->insert(c);
+    bst->insert(d);
+    bst->insert(b);
+    bst->inorder();
+    /*bst->postorder();*/
+
+//    if (bst->search(3) == TROVATO)cout << "trovato\n";
+//    cout << "minimo:" << bst->min()->chiave << endl;
+    cout << "massimo:" << bst->max() << endl;
+    return 0;
 }

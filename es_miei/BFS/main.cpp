@@ -277,6 +277,7 @@ UndirectedGraph::~UndirectedGraph() {
 bool edgeCompare(Edge* uv, Edge* xy){
     return (uv->weight < xy->weight);
 }
+/*
 UndirectedGraph UndirectedGraph::Kruskal(UndirectedGraph *g) {
     UndirectedGraph A;
     for(auto u : g->V){
@@ -291,6 +292,7 @@ UndirectedGraph UndirectedGraph::Kruskal(UndirectedGraph *g) {
         }
     }
 }
+*/
 
 
 int main(int argc, char **argv) {

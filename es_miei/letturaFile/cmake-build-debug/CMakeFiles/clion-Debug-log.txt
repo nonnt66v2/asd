@@ -1,0 +1,1 @@
+CMakeLists.txt not found in /home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/es_miei/letturaFile Select CMakeLists.txt
