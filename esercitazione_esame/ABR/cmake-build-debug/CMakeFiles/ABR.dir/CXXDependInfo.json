@@ -1,0 +1,18 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/ABR/cmake-build-debug",
+	"dir-cur-src" : "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/ABR",
+	"dir-top-bld" : "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/ABR/cmake-build-debug",
+	"dir-top-src" : "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/ABR",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/ABR/cmake-build-debug/CMakeFiles/ABR.dir"
+}

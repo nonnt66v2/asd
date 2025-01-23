@@ -11,12 +11,12 @@ enum ColoreVertice {
     WHITE, GRAY, BLACK
 };
 enum TipoArco {
-    ND, ARCO_AVANTI, ARCO_INDIETRO, ARCO_ALBERO, ARCO_CROSS
+    ND, ARCO_AVANTI, ARCO_INDIETRO, ARCO_ALBERO, ARCO_TRASVERSALE
 };
 
 class Edge;
 
-class nodo {
+class Nodo {
 public:
     int chiave;
     int rank;
@@ -24,27 +24,27 @@ public:
     short color;
     int d;
     int f;
-    nodo *p;
+    Nodo *p;
     vector<Edge *> adj;
 
-    nodo(int key, string label) : chiave{key}, label{label} {}
+    Nodo(int key, string label) : chiave{key}, label{label} {}
 };
 
 class Edge {
 public:
-    nodo *u;
-    nodo *v;
+    Nodo *u;
+    Nodo *v;
     int weight;
     short type;
 
-    Edge(nodo *u, nodo *v, int weight, short type = ND) : u{u}, v{v}, weight{weight}, type{type} {}
+    Edge(Nodo *u, Nodo *v, int weight, short type = ND) : u{u}, v{v}, weight{weight}, type{type} {}
 };
 
 class Graph {
 public:
-    vector<nodo *> V;
+    vector<Nodo *> V;
 
-    nodo *addNodo(string label = "");
+    Nodo *addNodo(string label = "");
 
     virtual void addEdge(int ukey, int vkey, int wieght) = 0;
 
@@ -60,24 +60,24 @@ public:
 
     void DFS();
 
-    void DFS_Visit(nodo *u, int &time);
+    void DFS_Visit(Nodo *u, int &time);
 
-    void makeSet(nodo *x);
+    void makeSet(Nodo *x);
 
-    nodo *findSet(nodo *x);
+    Nodo *findSet(Nodo *x);
 
-    void unionGraph(nodo *x, nodo *y);
+    void unionGraph(Nodo *x, Nodo *y);
 
 };
 
-nodo *Graph::addNodo(std::string label) {
+Nodo *Graph::addNodo(std::string label) {
     string newlabel = "";
     if (label == "") {
         newlabel[0] = 97 + V.size();
     } else {
         newlabel = label;
     }
-    V.push_back(new nodo(V.size(), newlabel));
+    V.push_back(new Nodo(V.size(), newlabel));
     return V.back();
 }
 
@@ -108,10 +108,10 @@ void Graph::BFS(int s) {
     V[s]->p = nullptr;
     V[s]->d = 0;
 
-    queue<nodo *> q;
+    queue<Nodo *> q;
     q.push(V[s]);
     while (!q.empty()) {
-        nodo *u = q.front();
+        Nodo *u = q.front();
         q.pop();
         cout << "vertex{" << u->label << "}: \n";
         for (auto edge: u->adj) {
@@ -145,7 +145,7 @@ void Graph::printExtendedInfo() {
     }
 }
 
-void Graph::DFS_Visit(nodo *u, int &time) {
+void Graph::DFS_Visit(Nodo *u, int &time) {
     u->color = GRAY;
     u->d = ++time;
     cout << "vertex{" << u->label << ", " << time << "}: \n";
@@ -172,20 +172,20 @@ void Graph::DFS() {
     }
 }
 
-void Graph::makeSet(nodo *x) {
+void Graph::makeSet(Nodo *x) {
     x->p = x;
 }
 
-nodo *Graph::findSet(nodo *x) {
+Nodo *Graph::findSet(Nodo *x) {
     if (x->p != x) {
             x->p = findSet(x->p);
     }
     return x->p;
 }
 
-void Graph::unionGraph(nodo *x, nodo *y) {
-    nodo *a = findSet(x);
-    nodo*b = findSet(y);
+void Graph::unionGraph(Nodo *x, Nodo *y) {
+    Nodo *a = findSet(x);
+    Nodo*b = findSet(y);
     if(a->rank > b->rank){
         b->p = a ;
     }
@@ -228,7 +228,7 @@ void DirectedGraph::getTransposed(DirectedGraph &dgt) {
 
     for (auto u: V) {
         for (auto uedge: u->adj) {
-            nodo *v = uedge->v;
+            Nodo *v = uedge->v;
             dgt.addEdge(v->chiave, u->chiave, uedge->weight);
         }
     }
@@ -297,14 +297,14 @@ UndirectedGraph UndirectedGraph::Kruskal(UndirectedGraph *g) {
 
 int main(int argc, char **argv) {
     DirectedGraph *dg = new DirectedGraph();
-    nodo *a = dg->addNodo("a");
-    nodo *b = dg->addNodo("b");
+    Nodo *a = dg->addNodo("a");
+    Nodo *b = dg->addNodo("b");
     dg->addEdge(a->chiave, b->chiave, 10);
-    nodo *c = dg->addNodo("c");
-    nodo *d = dg->addNodo("d");
+    Nodo *c = dg->addNodo("c");
+    Nodo *d = dg->addNodo("d");
     dg->addEdge(c->chiave, d->chiave, 23);
-    nodo *e = dg->addNodo("e");
-    nodo *f = dg->addNodo("f");
+    Nodo *e = dg->addNodo("e");
+    Nodo *f = dg->addNodo("f");
     dg->addEdge(e->chiave, f->chiave, 670);
 
 //    dg->printInfo();
@@ -321,8 +321,8 @@ int main(int argc, char **argv) {
     dg->BFS(0);
     cout << "\n\nNON ORIENTATO\n\n";
     UndirectedGraph *ung = new UndirectedGraph();
-    nodo *h = ung->addNodo("h");
-    nodo *g = ung->addNodo("g");
+    Nodo *h = ung->addNodo("h");
+    Nodo *g = ung->addNodo("g");
     ung->addEdge(h->chiave, g->chiave, 300);
     vector<Edge *> unEdges = ung->getEdges();
     for (auto u: unEdges) {
