@@ -5,7 +5,13 @@
 #include "grafo.h"
 
 template<typename T>
-void Graph<T>::addEdge(int ukey,int vkey, int weight) {
+void Graph<T>::addNodo(T chiave) {
+    Nodo<T>* tmp = new Nodo(chiave);
+    V[tmp->chiave] = tmp;
+}
+
+template<typename T>
+void Graph<T>::addEdge(T ukey,T vkey, T weight) {
     V[ukey].adj->push_back(new Edge(V[ukey],V[vkey],weight));
 }
 
