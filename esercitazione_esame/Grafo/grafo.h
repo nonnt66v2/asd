@@ -8,43 +8,77 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <map>
+#include <string>
+#include <atomic>
 
 using namespace std;
 
-enum Colore{BIANCO,GRIGIO,NERO};
+
+enum Colore {
+    BIANCO, GRIGIO, NERO
+};
+
+enum tipoArco {
+    ND, AVANTI, INDIETRO, TRASVERSALE, ALBERO
+};
+
 template<typename T>
 class Edge;
 
 template<typename T>
-class Nodo{
+class Nodo {
+public:
     int chiave;
-    std::string label;
-    Nodo<T>* sx,*dx;
-    Nodo<T>* padre;
-    vector<Edge<T>>* adj;
+    char label;
+    Nodo<T> *sx, *dx;
+    Nodo<T> *padre;
+    vector<Edge<T> *> adj;
     Colore colore;
-    int d,f;
+    int d, f;
 public:
-    Nodo(T chiave):chiave(chiave){label="";sx=dx=padre=nullptr;colore=BIANCO;d= f=0;}
-    Nodo():Nodo(-1){};
+    explicit Nodo(T chiave) : chiave(chiave) {
+        label = '\0';
+        sx = dx = padre = nullptr;
+        colore = BIANCO;
+        d = f = 0;
+    }
+
+    Nodo() : Nodo(-1) {};
 };
 
 template<typename T>
-class Edge{
-    Nodo<T>* u;
-    Nodo<T>* v;
+class Edge {
+public:
+    Nodo<T> *u;
+    Nodo<T> *v;
     int weight;
+    tipoArco ta;
 public:
-    Edge(Nodo<T>* u,Nodo<T>* v,int weight):u(u),v(v),weight(weight){};
-    Edge():Edge(nullptr, nullptr,-1) {};
+    Edge(Nodo<T> *u, Nodo<T> *v, int weight) : u(u), v(v), weight(weight) { ta = ND; };
+
+    Edge() : Edge(nullptr, nullptr, -1) {};
 };
 
 template<typename T>
-class Graph{
-    Nodo<T>* V;
+class Graph {
 public:
-    void addEdge(int ukey,int vkey, int weight);
+    std::vector<Nodo<T> *> V;
+public:
+    explicit Graph(int numNodi) {
+        std::vector<Nodo<T> *> tmp(numNodi);
+        V = tmp;
+    }
+
+    void addNodo(T chiave);
+
+    void addEdge(T ukey, T vkey, T weight);
+
     void DFS();
-    void DFS_Visit(Nodo<T>* u,int time);
+
+    void DFS_Visit(Nodo<T> *u, int time);
+
+    void printInfo();
 };
+
 #endif //GRAFO_GRAFO_H
