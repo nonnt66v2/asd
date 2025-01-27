@@ -3,6 +3,7 @@
 //
 #include "grafo.h"
 
+
 template<typename T>
 void Graph<T>::printInfo() {
     for (auto x: V) {
@@ -53,4 +54,6 @@ void Graph<T>::DFS_Visit(Nodo<T> *u, int time) {
     }
     u->colore = NERO;
     u->f = ++time;
-}
+}//
+// Created by nonnt66 on 25/01/25.
+//

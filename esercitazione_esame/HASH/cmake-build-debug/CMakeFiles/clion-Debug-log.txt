@@ -1,0 +1,4 @@
+/snap/clion/314/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/314/bin/ninja/linux/x64/ninja -G Ninja -S "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/HASH" -B "/home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/HASH/cmake-build-debug"
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/nonnt66/Scaricati/uni/Algoritmi e Strutture Dati/esame/asd/esercitazione_esame/HASH/cmake-build-debug

@@ -10,7 +10,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <atomic>
 
 using namespace std;
 
@@ -81,4 +80,11 @@ public:
     void printInfo();
 };
 
-#endif //GRAFO_GRAFO_H
+#endif //GRAFO_GRAFO_H//
+// Created by nonnt66 on 25/01/25.
+//
+
+#ifndef GRAFO1_GRAFO_H
+#define GRAFO1_GRAFO_H
+
+#endif //GRAFO1_GRAFO_H
