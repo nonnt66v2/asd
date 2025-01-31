@@ -83,8 +83,78 @@ public:
 
     void BFS(int source);
 
+
     void printInfo();
+
+
+
+    void getTransposed(Graph<T> &GT);
+
+
+    void SCC_Visit(Nodo<T>* u,int tempo,queue<Nodo<T>*> &Q);
+
+    Graph<T> *SCC(Graph<T>* G, Graph<T> &SCC);
 };
+
+template<typename T>
+void Graph<T>::SCC_Visit(Nodo<T> *u,int tempo,queue<Nodo<T>*> &Q) {
+    u->colore = GRIGIO;
+    u->d = ++tempo;
+    for(auto uvedge: u->adj){
+        if(uvedge->v->colore == BIANCO){
+            uvedge->v->padre = u;
+            SCC_Visit(uvedge->v,tempo,Q);
+        }
+        else if(uvedge->v->colore == NERO){
+            Q.push(uvedge->v);
+        }
+    }
+    u->colore = NERO;
+    u->d = ++tempo;
+
+}
+
+template<typename T>
+void Graph<T>::getTransposed(Graph<T> &GT) {
+    for(auto u: V){
+        GT.addNodo(u->chiave);
+    }
+    for(auto u:V){
+        for(auto uvedge: u->adj){
+            Nodo<T>* tmp = uvedge->v;
+            GT.addEdge(tmp->chiave,u->chiave,uvedge->weight);
+        }
+    }
+}
+
+template<typename T>
+Graph<T> *Graph<T>::SCC(Graph<T>* G, Graph<T> &SCC) {
+    auto S = tsDFS();
+    auto *GT = new Graph<T>(15);
+    G->getTransposed(*GT);
+    queue<Nodo<T>*> Q;
+    int tempo =0;
+    while(!S.empty()){
+        Nodo<T>* tmp = S.top();S.pop();
+        if(GT->V[tmp->chiave]->colore == BIANCO){
+            SCC_Visit(GT->V[tmp->chiave], tempo, Q);
+            GT->addNodo(GT->V[tmp->chiave]->chiave);
+            while(!Q.empty()){
+                for(int i=0; i < SCC.V.size() - 1; i++){
+                    if((SCC.V[i]->chiave) != -1){
+                        SCC.addEdge(i, SCC.V.back()->chiave, 1);
+                    }
+                }
+            }
+
+            Q.pop();
+        }
+
+    }
+    return GT;
+}
+
+
 
 template<typename T>
 void Graph<T>::BFS(int source) {
@@ -233,10 +303,10 @@ int main() {
         dg->addNodo(u);
         dg->addNodo(v);
     }
-    f.seekg(SEEK_SET);
+    /*f.seekg(SEEK_SET);
     while (f >> u >> v >> peso) {
         dg->addEdge(u, v, peso);
-    }
+    }*/
     f.close();
     dg->addEdge(0, 1, 10);
     dg->addEdge(0, 2, 10);
@@ -269,8 +339,10 @@ int main() {
     for(auto x : dg->V){
         cout<<x->chiave<<":"<<x->d<<endl;
     }
-//    dg->printInfo();
-
+    dg->printInfo();
+    auto SCC = new Graph<int>(numNodi);
+    auto G = dg;
+    dg->SCC(G, *SCC);
     free(dg);
 
 }

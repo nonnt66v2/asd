@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(HASH main.cpp
         hash.cpp
-        hash.h)
+        hash.h
+        hash_test.cpp)
